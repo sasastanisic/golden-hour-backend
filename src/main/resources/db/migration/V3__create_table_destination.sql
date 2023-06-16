@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS `destination` (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  place VARCHAR(100) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  population DOUBLE NOT NULL,
+  description VARCHAR(1000) NOT NULL,
+  PRIMARY KEY (id)
+);
