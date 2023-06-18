@@ -9,5 +9,6 @@ public class GoldenHourApplication {
     public static void main(String[] args) {
         SpringApplication.run(GoldenHourApplication.class, args);
     }
+    // TODO: handle warning for INT values in migrations
 
 }

@@ -1,5 +1,6 @@
 package com.goldenhour.domain.destination.service;
 
+import com.goldenhour.domain.destination.entity.Destination;
 import com.goldenhour.domain.destination.model.DestinationRequestDTO;
 import com.goldenhour.domain.destination.model.DestinationResponseDTO;
 import com.goldenhour.domain.destination.model.DestinationUpdateDTO;
@@ -15,6 +16,8 @@ public interface DestinationService {
     Page<DestinationResponseDTO> getAllDestinations(Pageable pageable);
 
     DestinationResponseDTO getDestinationById(Long id);
+
+    Destination getById(Long id);
 
     List<DestinationResponseDTO> getDestinationsByCountry(String country);
 

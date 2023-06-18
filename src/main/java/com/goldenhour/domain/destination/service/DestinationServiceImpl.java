@@ -57,7 +57,7 @@ public class DestinationServiceImpl implements DestinationService {
         return destinationMapper.toDestinationResponseDTO(getById(id));
     }
 
-    private Destination getById(Long id) {
+    public Destination getById(Long id) {
         Optional<Destination> optionalDestination = destinationRepository.findById(id);
 
         if (optionalDestination.isEmpty()) {
