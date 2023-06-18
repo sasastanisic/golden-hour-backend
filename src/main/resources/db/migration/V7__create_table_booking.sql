@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `booking` (
   id BIGINT NOT NULL AUTO_INCREMENT,
-  number_of_people INT(10) NOT NULL,
+  number_of_people INT NOT NULL,
   own_transport BOOLEAN NOT NULL,
   total_price DOUBLE NOT NULL,
   user_id BIGINT NOT NULL,
