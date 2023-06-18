@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface DestinationRepository extends JpaRepository<Destination, Long> {
 
+    boolean existsByPlace(String place);
+
     boolean existsByCountryAndPlace(String country, String place);
 
     List<Destination> findByCountry(String country);

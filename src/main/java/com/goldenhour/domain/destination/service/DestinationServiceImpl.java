@@ -57,6 +57,13 @@ public class DestinationServiceImpl implements DestinationService {
         return destinationMapper.toDestinationResponseDTO(getById(id));
     }
 
+    @Override
+    public void existsByPlace(String place) {
+        if (!destinationRepository.existsByPlace(place)) {
+            throw new NotFoundException("Destination place %s doesn't exist".formatted(place));
+        }
+    }
+
     public Destination getById(Long id) {
         Optional<Destination> optionalDestination = destinationRepository.findById(id);
 
