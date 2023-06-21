@@ -17,6 +17,8 @@ public interface DestinationService {
 
     DestinationResponseDTO getDestinationById(Long id);
 
+    void existsById(Long id);
+
     void existsByPlace(String place);
 
     Destination getById(Long id);

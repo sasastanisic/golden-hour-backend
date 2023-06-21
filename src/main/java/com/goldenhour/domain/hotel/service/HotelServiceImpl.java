@@ -50,7 +50,7 @@ public class HotelServiceImpl implements HotelService {
 
     private void validateNameAndDestination(String name, Long destinationId) {
         if (hotelRepository.existsByNameAndDestination_Id(name, destinationId)) {
-            throw new ConflictException("Hotel with name %s already exists at destination that has id %d".formatted(name, destinationId));
+            throw new ConflictException("%s already exists at destination that has id %d".formatted(name, destinationId));
         }
     }
 
