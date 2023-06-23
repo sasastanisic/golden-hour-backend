@@ -17,11 +17,11 @@ public interface DestinationService {
 
     DestinationResponseDTO getDestinationById(Long id);
 
+    Destination getById(Long id);
+
     void existsById(Long id);
 
     void existsByPlace(String place);
-
-    Destination getById(Long id);
 
     List<DestinationResponseDTO> getDestinationsByCountry(String country);
 

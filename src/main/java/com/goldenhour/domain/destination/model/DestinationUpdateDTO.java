@@ -15,7 +15,10 @@ public record DestinationUpdateDTO(
         double population,
 
         @NotBlank(message = "Description can't be blank")
-        String description
+        String description,
+
+        @NotBlank(message = "Picture url can't be blank")
+        String pictureUrl
 
 ) {
 

@@ -24,7 +24,10 @@ public record HotelUpdateDTO(
 
         @Min(value = 5, message = "Minimum price for one night is 5€")
         @Max(value = 20000, message = "Maximum price for one night is 20000€")
-        double pricePerNight
+        double pricePerNight,
+
+        @NotBlank(message = "Picture url can't be blank")
+        String pictureUrl
 
 ) {
 

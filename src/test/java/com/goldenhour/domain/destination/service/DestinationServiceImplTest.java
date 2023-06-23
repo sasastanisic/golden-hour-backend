@@ -50,6 +50,7 @@ public class DestinationServiceImplTest {
         destination.setCountry("Greece");
         destination.setPopulation(15000);
         destination.setDescription("One of the most beautiful islands in the world");
+        destination.setPictureUrl("santorini.jpg");
 
         List<Destination> destinationList = new ArrayList<>();
         destinationList.add(destination);
@@ -59,9 +60,9 @@ public class DestinationServiceImplTest {
     @Test
     void testCreateDestination() {
         DestinationRequestDTO destinationRequestDTO = new DestinationRequestDTO("Santorini", "Greece", 15000,
-                "One of the most beautiful islands in the world");
+                "One of the most beautiful islands in the world", "santorini.jpg");
         DestinationResponseDTO destinationResponseDTO = new DestinationResponseDTO(1L, "Santorini", "Greece", 15000,
-                "One of the most beautiful islands in the world");
+                "One of the most beautiful islands in the world", "santorini.jpg");
 
         when(destinationMapper.toDestination(destinationRequestDTO)).thenReturn(destination);
         when(destinationRepository.existsByCountryAndPlace(destinationRequestDTO.country(), destinationRequestDTO.place())).thenReturn(false);
@@ -70,13 +71,13 @@ public class DestinationServiceImplTest {
 
         var createdDestinationDTO = destinationService.createDestination(destinationRequestDTO);
 
-        assertThat(destinationResponseDTO).isEqualTo(createdDestinationDTO);
+        assertThat(destinationResponseDTO).usingRecursiveComparison().isEqualTo(createdDestinationDTO);
     }
 
     @Test
     void testDestinationByCountryAndPlace() {
         DestinationRequestDTO destinationRequestDTO = new DestinationRequestDTO("Santorini", "Greece", 15000,
-                "One of the most beautiful islands in the world");
+                "One of the most beautiful islands in the world", "santorini.jpg");
 
         when(destinationMapper.toDestination(destinationRequestDTO)).thenReturn(destination);
         doReturn(false).when(destinationRepository).existsByCountryAndPlace(destinationRequestDTO.country(), destinationRequestDTO.place());
@@ -87,7 +88,7 @@ public class DestinationServiceImplTest {
     @Test
     void testDestinationByCountryAndPlace_NotValid() {
         DestinationRequestDTO destinationRequestDTO = new DestinationRequestDTO("Santorini", "Greece", 15000,
-                "One of the most beautiful islands in the world");
+                "One of the most beautiful islands in the world", "santorini.jpg");
 
         when(destinationMapper.toDestination(destinationRequestDTO)).thenReturn(destination);
         doReturn(true).when(destinationRepository).existsByCountryAndPlace(destinationRequestDTO.country(), destinationRequestDTO.place());
@@ -99,7 +100,7 @@ public class DestinationServiceImplTest {
     void testGetAllDestinations() {
         Pageable pageable = mock(Pageable.class);
         DestinationResponseDTO destinationResponseDTO = new DestinationResponseDTO(1L, "Santorini", "Greece", 15000,
-                "One of the most beautiful islands in the world");
+                "One of the most beautiful islands in the world", "santorini.jpg");
 
         when(destinationMapper.toDestinationResponseDTO(destination)).thenReturn(destinationResponseDTO);
         var expectedDestinations = destinations.map(destination -> destinationMapper.toDestinationResponseDTO(destination));
@@ -112,7 +113,7 @@ public class DestinationServiceImplTest {
     @Test
     void testGetDestinationById() {
         DestinationResponseDTO destinationResponseDTO = new DestinationResponseDTO(1L, "Santorini", "Greece", 15000,
-                "One of the most beautiful islands in the world");
+                "One of the most beautiful islands in the world", "santorini.jpg");
 
         when(destinationMapper.toDestinationResponseDTO(destination)).thenReturn(destinationResponseDTO);
         var expectedDestination = destinationMapper.toDestinationResponseDTO(destination);
@@ -129,10 +130,36 @@ public class DestinationServiceImplTest {
     }
 
     @Test
+    void testDestinationExists() {
+        doReturn(true).when(destinationRepository).existsById(1L);
+        Assertions.assertDoesNotThrow(() -> destinationService.existsById(1L));
+        verify(destinationRepository, times(1)).existsById(1L);
+    }
+
+    @Test
+    void testDestinationExists_NotFound() {
+        doReturn(false).when(destinationRepository).existsById(1L);
+        Assertions.assertThrows(NotFoundException.class, () -> destinationService.existsById(1L));
+    }
+
+    @Test
+    void testDestinationExistsByPlace() {
+        doReturn(true).when(destinationRepository).existsByPlace("Santorini");
+        Assertions.assertDoesNotThrow(() -> destinationService.existsByPlace("Santorini"));
+        verify(destinationRepository, times(1)).existsByPlace("Santorini");
+    }
+
+    @Test
+    void testDestinationExistsByPlace_NotFound() {
+        doReturn(false).when(destinationRepository).existsByPlace("Santorini");
+        Assertions.assertThrows(NotFoundException.class, () -> destinationService.existsByPlace("Santorini"));
+    }
+
+    @Test
     void testGetDestinationsByCountry() {
         List<Destination> destinationsByCountry = List.of(destination);
         DestinationResponseDTO destinationResponseDTO = new DestinationResponseDTO(1L, "Santorini", "Greece", 15000,
-                "One of the most beautiful islands in the world");
+                "One of the most beautiful islands in the world", "santorini.jpg");
 
         when(destinationMapper.toDestinationResponseDTO(destination)).thenReturn(destinationResponseDTO);
         var expectedList = destinationsByCountry
@@ -143,16 +170,16 @@ public class DestinationServiceImplTest {
         var returnedList = destinationService.getDestinationsByCountry(destination.getCountry());
 
         Assertions.assertTrue(destinationsByCountry.contains(destination));
-        Assertions.assertEquals(expectedList, returnedList);
+        assertThat(expectedList).usingRecursiveComparison().isEqualTo(returnedList);
         Assertions.assertFalse(returnedList.isEmpty());
     }
 
     @Test
     void testUpdateDestination() {
         DestinationUpdateDTO destinationUpdateDTO = new DestinationUpdateDTO("Santorini", "Greece", 50000,
-                "The most popular island in the Europe at the moment");
+                "The most popular island in the Europe at the moment", "santorini.jpg");
         DestinationResponseDTO destinationResponseDTO = new DestinationResponseDTO(1L, "Santorini", "Greece", 50000,
-                "The most popular island in the Europe at the moment");
+                "The most popular island in the Europe at the moment", "santorini.jpg");
 
         when(destinationRepository.findById(1L)).thenReturn(Optional.of(destination));
         doCallRealMethod().when(destinationMapper).updateDestinationFromDTO(destinationUpdateDTO, destination);
@@ -162,7 +189,7 @@ public class DestinationServiceImplTest {
 
         var updatedDestinationDTO = destinationService.updateDestination(1L, destinationUpdateDTO);
 
-        assertThat(destinationResponseDTO).isEqualTo(updatedDestinationDTO);
+        assertThat(destinationResponseDTO).usingRecursiveComparison().isEqualTo(updatedDestinationDTO);
     }
 
     @Test

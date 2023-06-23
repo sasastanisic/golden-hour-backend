@@ -108,9 +108,7 @@ public class DestinationServiceImpl implements DestinationService {
 
     @Override
     public void deleteDestination(Long id) {
-        if (!destinationRepository.existsById(id)) {
-            throw new NotFoundException(DESTINATION_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         destinationRepository.deleteById(id);
     }

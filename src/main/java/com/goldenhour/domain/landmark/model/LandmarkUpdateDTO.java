@@ -14,7 +14,10 @@ public record LandmarkUpdateDTO(
 
         @Min(value = 0, message = "Minimum price is 0€")
         @Max(value = 1000, message = "Maximum price is 1000€")
-        double price
+        double price,
+
+        @NotBlank(message = "Picture url can't be blank")
+        String pictureUrl
 
 ) {
 
