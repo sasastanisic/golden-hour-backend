@@ -21,6 +21,9 @@ public class Destination {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    private String pictureUrl;
+
     public Destination() {
     }
 
@@ -62,6 +65,14 @@ public class Destination {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
 }

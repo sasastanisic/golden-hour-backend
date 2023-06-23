@@ -6,7 +6,8 @@ public record DestinationResponseDTO(
         String place,
         String country,
         double population,
-        String description
+        String description,
+        String pictureUrl
 
 ) {
 

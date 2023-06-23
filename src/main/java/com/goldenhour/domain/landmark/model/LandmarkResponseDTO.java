@@ -10,6 +10,7 @@ public record LandmarkResponseDTO(
         String description,
         double price,
         Category category,
+        String pictureUrl,
         DestinationResponseDTO destination
 
 ) {

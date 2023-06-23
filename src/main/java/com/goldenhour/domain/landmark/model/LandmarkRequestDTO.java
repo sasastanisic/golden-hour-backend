@@ -21,6 +21,9 @@ public record LandmarkRequestDTO(
         @NotNull(message = "Landmark category can't be null")
         Category category,
 
+        @NotBlank(message = "Picture url can't be blank")
+        String pictureUrl,
+
         @NotNull(message = "Destination can't be null")
         Long destinationId
 

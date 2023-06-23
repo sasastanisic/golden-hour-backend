@@ -11,6 +11,7 @@ public record HotelResponseDTO(
         HotelType hotelType,
         int availableRooms,
         double pricePerNight,
+        String pictureUrl,
         DestinationResponseDTO destination
 
 ) {

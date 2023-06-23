@@ -26,6 +26,9 @@ public record HotelRequestDTO(
         @Max(value = 20000, message = "Maximum price for one night is 20000€")
         double pricePerNight,
 
+        @NotBlank(message = "Picture url can't be blank")
+        String pictureUrl,
+
         @NotNull(message = "Destination can't be null")
         Long destinationId
 

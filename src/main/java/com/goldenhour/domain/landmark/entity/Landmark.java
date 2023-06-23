@@ -24,6 +24,9 @@ public class Landmark {
     @Column(nullable = false)
     private Category category;
 
+    @Column(nullable = false)
+    private String pictureUrl;
+
     @ManyToOne
     @JoinColumn(name = "destination_id", nullable = false)
     private Destination destination;
@@ -69,6 +72,14 @@ public class Landmark {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     public Destination getDestination() {

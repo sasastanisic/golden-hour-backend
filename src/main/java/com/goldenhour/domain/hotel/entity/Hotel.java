@@ -27,6 +27,9 @@ public class Hotel {
     @Column(nullable = false)
     private double pricePerNight;
 
+    @Column(nullable = false)
+    private String pictureUrl;
+
     @ManyToOne
     @JoinColumn(name = "destination_id", nullable = false)
     private Destination destination;
@@ -80,6 +83,14 @@ public class Hotel {
 
     public void setPricePerNight(double pricePerNight) {
         this.pricePerNight = pricePerNight;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     public Destination getDestination() {
