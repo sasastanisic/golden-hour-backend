@@ -100,7 +100,6 @@ public class DestinationServiceImpl implements DestinationService {
         Destination destination = getById(id);
         destinationMapper.updateDestinationFromDTO(destinationDTO, destination);
 
-        validateCountryAndPlace(destinationDTO.country(), destinationDTO.place());
         destinationRepository.save(destination);
 
         return destinationMapper.toDestinationResponseDTO(destination);

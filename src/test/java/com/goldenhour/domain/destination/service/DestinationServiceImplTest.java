@@ -183,7 +183,6 @@ public class DestinationServiceImplTest {
 
         when(destinationRepository.findById(1L)).thenReturn(Optional.of(destination));
         doCallRealMethod().when(destinationMapper).updateDestinationFromDTO(destinationUpdateDTO, destination);
-        when(destinationRepository.existsByCountryAndPlace(destinationUpdateDTO.country(), destinationUpdateDTO.place())).thenReturn(false);
         when(destinationRepository.save(destination)).thenReturn(destination);
         doReturn(destinationResponseDTO).when(destinationMapper).toDestinationResponseDTO(destination);
 
