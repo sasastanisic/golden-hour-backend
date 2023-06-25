@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final String TIMESTAMP = ZonedDateTime.now(ZoneId.of("CET")).toString();
 
     @ExceptionHandler
     public ResponseEntity<Object> handleMethodArgumentException(MethodArgumentNotValidException e) {
@@ -26,7 +29,7 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         errors.put("status", status);
-        errors.put("timestamp", ZonedDateTime.now());
+        errors.put("timestamp", TIMESTAMP);
 
         return new ResponseEntity<>(errors, status);
     }
@@ -37,7 +40,7 @@ public class GlobalExceptionHandler {
                 .getAnnotation(ResponseStatus.class)
                 .value();
 
-        ApiErrorResponse response = new ApiErrorResponse(e.getMessage(), status, ZonedDateTime.now());
+        ApiErrorResponse response = new ApiErrorResponse(e.getMessage(), status, TIMESTAMP);
 
         return new ResponseEntity<>(response, status);
     }
@@ -53,7 +56,7 @@ public class GlobalExceptionHandler {
             message = "Entered value is not a valid type";
         }
 
-        ApiErrorResponse response = new ApiErrorResponse(message, status, ZonedDateTime.now());
+        ApiErrorResponse response = new ApiErrorResponse(message, status, TIMESTAMP);
 
         return new ResponseEntity<>(response, status);
     }
