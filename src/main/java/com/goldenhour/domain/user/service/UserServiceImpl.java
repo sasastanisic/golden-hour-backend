@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponseDTO(getById(id));
     }
 
-    private User getById(Long id) {
+    public User getById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {

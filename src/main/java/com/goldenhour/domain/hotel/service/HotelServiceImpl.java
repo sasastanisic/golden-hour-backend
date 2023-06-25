@@ -64,7 +64,7 @@ public class HotelServiceImpl implements HotelService {
         return hotelMapper.toHotelResponseDTO(getById(id));
     }
 
-    private Hotel getById(Long id) {
+    public Hotel getById(Long id) {
         Optional<Hotel> optionalHotel = hotelRepository.findById(id);
 
         if (optionalHotel.isEmpty()) {
@@ -97,6 +97,12 @@ public class HotelServiceImpl implements HotelService {
         hotelRepository.save(hotel);
 
         return hotelMapper.toHotelResponseDTO(hotel);
+    }
+
+    @Override
+    public void updateNumberOfAvailableRooms(Hotel hotel) {
+        hotel.setAvailableRooms(hotel.getAvailableRooms() - 1);
+        hotelRepository.save(hotel);
     }
 
     @Override

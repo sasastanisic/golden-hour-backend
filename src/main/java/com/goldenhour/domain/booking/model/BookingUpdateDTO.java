@@ -11,10 +11,7 @@ public record BookingUpdateDTO(
         int numberOfPeople,
 
         @NotNull(message = "Own transport can't be null")
-        boolean ownTransport,
-
-        @NotNull(message = "Hotel can't be null")
-        Long hotelId
+        boolean ownTransport
 
 ) {
 

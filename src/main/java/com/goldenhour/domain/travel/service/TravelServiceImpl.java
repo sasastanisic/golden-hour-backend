@@ -64,7 +64,7 @@ public class TravelServiceImpl implements TravelService {
         return travelMapper.toTravelResponseDTO(getById(id));
     }
 
-    private Travel getById(Long id) {
+    public Travel getById(Long id) {
         Optional<Travel> optionalTravel = travelRepository.findById(id);
 
         if (optionalTravel.isEmpty()) {

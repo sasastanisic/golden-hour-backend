@@ -1,5 +1,6 @@
 package com.goldenhour.domain.travel.service;
 
+import com.goldenhour.domain.travel.entity.Travel;
 import com.goldenhour.domain.travel.model.TravelRequestDTO;
 import com.goldenhour.domain.travel.model.TravelResponseDTO;
 import com.goldenhour.domain.travel.model.TravelUpdateDTO;
@@ -15,6 +16,8 @@ public interface TravelService {
     Page<TravelResponseDTO> getAllTravels(Pageable pageable);
 
     TravelResponseDTO getTravelById(Long id);
+
+    Travel getById(Long id);
 
     List<TravelResponseDTO> getTravelsByDestination(Long destinationId);
 
