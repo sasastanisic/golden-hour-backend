@@ -13,6 +13,7 @@ import com.goldenhour.infrastructure.handler.exceptions.ConflictException;
 import com.goldenhour.infrastructure.handler.exceptions.ForbiddenException;
 import com.goldenhour.infrastructure.handler.exceptions.NotFoundException;
 import com.goldenhour.infrastructure.mapper.BookingMapper;
+import com.goldenhour.infrastructure.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,18 +33,21 @@ public class BookingServiceImpl implements BookingService {
     private final UserService userService;
     private final TravelService travelService;
     private final HotelService hotelService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
     public BookingServiceImpl(BookingRepository bookingRepository,
                               BookingMapper bookingMapper,
                               UserService userService,
                               TravelService travelService,
-                              HotelService hotelService) {
+                              HotelService hotelService,
+                              AuthenticationService authenticationService) {
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
         this.userService = userService;
         this.travelService = travelService;
         this.hotelService = hotelService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -122,7 +126,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingResponseDTO> getBookingsByUser(Long userId) {
         List<Booking> bookingsByUser = bookingRepository.findBookingsByUser(userId);
+        var user = userService.getById(userId);
         userService.existsById(userId);
+
+        authenticationService.canUserAccess(user.getUsername(), "You don't have permission to view other user's bookings");
 
         if (bookingsByUser.isEmpty()) {
             throw new NotFoundException("There are 0 bookings for user with id %d".formatted(userId));

@@ -1,5 +1,7 @@
 package com.goldenhour.domain.user.model;
 
+import com.goldenhour.domain.user.enums.Role;
+
 public record UserResponseDTO(
 
         Long id,
@@ -8,7 +10,8 @@ public record UserResponseDTO(
         int age,
         String email,
         String username,
-        String password
+        String password,
+        Role role
 
 ) {
 

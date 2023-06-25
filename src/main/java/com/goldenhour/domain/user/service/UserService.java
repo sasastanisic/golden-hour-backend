@@ -7,6 +7,8 @@ import com.goldenhour.domain.user.model.UserUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 public interface UserService {
 
     UserResponseDTO createUser(UserRequestDTO userDTO);
@@ -16,6 +18,8 @@ public interface UserService {
     UserResponseDTO getUserById(Long id);
 
     User getById(Long id);
+
+    Optional<User> getUserByUsername(String username);
 
     void existsById(Long id);
 

@@ -1,6 +1,7 @@
 package com.goldenhour.domain.user.service;
 
 import com.goldenhour.domain.user.entity.User;
+import com.goldenhour.domain.user.enums.Role;
 import com.goldenhour.domain.user.model.UserRequestDTO;
 import com.goldenhour.domain.user.model.UserResponseDTO;
 import com.goldenhour.domain.user.model.UserUpdateDTO;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO createUser(UserRequestDTO userDTO) {
         User user = userMapper.toUser(userDTO);
 
+        user.setRole(Role.USER);
         arePasswordsMatching(userDTO.password(), userDTO.confirmedPassword());
         validateEmailAndUsername(userDTO.email(), userDTO.username());
         userRepository.save(user);
@@ -84,6 +86,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return optionalUser.get();
+    }
+
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
