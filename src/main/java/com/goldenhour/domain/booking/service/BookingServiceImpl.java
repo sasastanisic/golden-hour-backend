@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -52,6 +53,9 @@ public class BookingServiceImpl implements BookingService {
         var travel = travelService.getById(bookingDTO.travelId());
         var hotel = hotelService.getById(bookingDTO.hotelId());
 
+        var totalPrice = calculateTotalPrice(travel.getNumberOfNights(), hotel.getPricePerNight(), bookingDTO.numberOfPeople(), bookingDTO.ownTransport());
+
+        booking.setTotalPrice(totalPrice);
         booking.setUser(user);
         booking.setTravel(travel);
         booking.setHotel(hotel);
@@ -65,6 +69,16 @@ public class BookingServiceImpl implements BookingService {
         hotelService.updateNumberOfAvailableRooms(hotel);
 
         return bookingMapper.toBookingResponseDTO(booking);
+    }
+
+    private Double calculateTotalPrice(int numberOfNights, double pricePerNight, int numberOfPeople, boolean ownTransport) {
+        var totalPrice = numberOfNights * pricePerNight * numberOfPeople;
+
+        if (!ownTransport) {
+            totalPrice = totalPrice * 1.15;
+        }
+
+        return totalPrice;
     }
 
     private void checkHotelExistsInDestination(Long hotelId, Long travelId) {
@@ -107,17 +121,45 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponseDTO> getBookingsByUser(Long userId) {
-        return null;
+        List<Booking> bookingsByUser = bookingRepository.findBookingsByUser(userId);
+        userService.existsById(userId);
+
+        if (bookingsByUser.isEmpty()) {
+            throw new NotFoundException("There are 0 bookings for user with id %d".formatted(userId));
+        }
+
+        return getBookingListResponseDTO(bookingsByUser);
     }
 
     @Override
     public List<BookingResponseDTO> getBookingsByTravel(Long travelId) {
-        return null;
+        List<Booking> bookingsByTravel = bookingRepository.findBookingsByTravel(travelId);
+        travelService.existsById(travelId);
+
+        if (bookingsByTravel.isEmpty()) {
+            throw new NotFoundException("List of bookings by travel with id %d is empty".formatted(travelId));
+        }
+
+        return getBookingListResponseDTO(bookingsByTravel);
     }
 
     @Override
     public List<BookingResponseDTO> getBookingsByHotel(Long hotelId) {
-        return null;
+        List<Booking> bookingsByHotel = bookingRepository.findBookingsByHotel(hotelId);
+        hotelService.existsById(hotelId);
+
+        if (bookingsByHotel.isEmpty()) {
+            throw new NotFoundException("List of bookings by hotel that has id %d is empty".formatted(hotelId));
+        }
+
+        return getBookingListResponseDTO(bookingsByHotel);
+    }
+
+    private List<BookingResponseDTO> getBookingListResponseDTO(List<Booking> bookingList) {
+        return bookingList
+                .stream()
+                .map(bookingMapper::toBookingResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

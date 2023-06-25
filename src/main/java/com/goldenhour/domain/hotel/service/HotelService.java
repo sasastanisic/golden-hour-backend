@@ -19,6 +19,8 @@ public interface HotelService {
 
     Hotel getById(Long id);
 
+    void existsById(Long id);
+
     List<HotelResponseDTO> getHotelsByDestinationPlace(String destinationPlace);
 
     HotelResponseDTO updateHotel(Long id, HotelUpdateDTO hotelDTO);

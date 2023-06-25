@@ -75,6 +75,13 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    public void existsById(Long id) {
+        if (!hotelRepository.existsById(id)) {
+            throw new NotFoundException(HOTEL_NOT_EXISTS.formatted(id));
+        }
+    }
+
+    @Override
     public List<HotelResponseDTO> getHotelsByDestinationPlace(String destinationPlace) {
         List<Hotel> hotelsByDestinationPlace = hotelRepository.findByDestination_Place(destinationPlace);
         destinationService.existsByPlace(destinationPlace);
@@ -107,9 +114,7 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public void deleteHotel(Long id) {
-        if (!hotelRepository.existsById(id)) {
-            throw new NotFoundException(HOTEL_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         hotelRepository.deleteById(id);
     }

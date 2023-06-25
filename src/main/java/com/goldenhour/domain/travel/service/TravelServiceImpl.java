@@ -75,6 +75,13 @@ public class TravelServiceImpl implements TravelService {
     }
 
     @Override
+    public void existsById(Long id) {
+        if (!travelRepository.existsById(id)) {
+            throw new NotFoundException(TRAVEL_NOT_EXISTS.formatted(id));
+        }
+    }
+
+    @Override
     public List<TravelResponseDTO> getTravelsByDestination(Long destinationId) {
         List<Travel> travelsByDestination = travelRepository.findByDestination_Id(destinationId);
         destinationService.existsById(destinationId);
@@ -101,9 +108,7 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public void deleteTravel(Long id) {
-        if (!travelRepository.existsById(id)) {
-            throw new NotFoundException(TRAVEL_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         travelRepository.deleteById(id);
     }

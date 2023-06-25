@@ -87,6 +87,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void existsById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException(USER_NOT_EXISTS.formatted(id));
+        }
+    }
+
+    @Override
     public UserResponseDTO updateUser(Long id, UserUpdateDTO userDTO) {
         User user = getById(id);
         userMapper.updateUserFromDTO(userDTO, user);
@@ -99,9 +106,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new NotFoundException(USER_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         userRepository.deleteById(id);
     }

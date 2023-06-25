@@ -19,6 +19,8 @@ public interface TravelService {
 
     Travel getById(Long id);
 
+    void existsById(Long id);
+
     List<TravelResponseDTO> getTravelsByDestination(Long destinationId);
 
     TravelResponseDTO updateTravel(Long id, TravelUpdateDTO travelDTO);
