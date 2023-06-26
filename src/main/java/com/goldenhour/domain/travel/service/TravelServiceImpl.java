@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class TravelServiceImpl implements TravelService {
 
-    private final static String TRAVEL_NOT_EXISTS = "Travel with id %d doesn't exist";
+    private static final String TRAVEL_NOT_EXISTS = "Travel with id %d doesn't exist";
 
     private final TravelRepository travelRepository;
     private final TravelMapper travelMapper;

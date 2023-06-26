@@ -4,8 +4,10 @@ import com.goldenhour.domain.review.entity.Review;
 import com.goldenhour.domain.review.model.ReviewRequestDTO;
 import com.goldenhour.domain.review.model.ReviewResponseDTO;
 import com.goldenhour.domain.review.model.ReviewUpdateDTO;
+import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
+@Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
     Review toReview(ReviewRequestDTO reviewRequestDTO);
