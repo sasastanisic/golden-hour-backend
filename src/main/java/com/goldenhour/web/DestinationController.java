@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class DestinationController {
         this.destinationService = destinationService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<DestinationResponseDTO> createDestination(@Valid @RequestBody DestinationRequestDTO destinationDTO) {
         return ResponseEntity.ok(destinationService.createDestination(destinationDTO));
@@ -40,16 +42,19 @@ public class DestinationController {
         return ResponseEntity.ok(destinationService.getDestinationById(id));
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/by-country")
     public ResponseEntity<List<DestinationResponseDTO>> getDestinationsByCountry(@RequestParam String country) {
         return ResponseEntity.ok(destinationService.getDestinationsByCountry(country));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<DestinationResponseDTO> updateDestination(@PathVariable Long id, @Valid @RequestBody DestinationUpdateDTO destinationDTO) {
         return ResponseEntity.ok(destinationService.updateDestination(id, destinationDTO));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDestination(@PathVariable Long id) {
