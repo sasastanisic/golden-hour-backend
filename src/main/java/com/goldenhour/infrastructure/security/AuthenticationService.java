@@ -6,6 +6,7 @@ import com.goldenhour.domain.user.service.UserService;
 import com.goldenhour.infrastructure.handler.exceptions.ForbiddenException;
 import com.goldenhour.infrastructure.handler.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,7 @@ public class AuthenticationService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationService(UserService userService, JwtUtil jwtUtil) {
+    public AuthenticationService(@Lazy UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }

@@ -2,6 +2,7 @@ package com.goldenhour.domain.user.service;
 
 import com.goldenhour.domain.user.entity.User;
 import com.goldenhour.domain.user.enums.Role;
+import com.goldenhour.domain.user.model.PasswordDTO;
 import com.goldenhour.domain.user.model.UserRequestDTO;
 import com.goldenhour.domain.user.model.UserResponseDTO;
 import com.goldenhour.domain.user.model.UserUpdateDTO;
@@ -9,9 +10,12 @@ import com.goldenhour.domain.user.repository.UserRepository;
 import com.goldenhour.infrastructure.handler.exceptions.ConflictException;
 import com.goldenhour.infrastructure.handler.exceptions.NotFoundException;
 import com.goldenhour.infrastructure.mapper.UserMapper;
+import com.goldenhour.infrastructure.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,19 +28,27 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AuthenticationService authenticationService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository,
+                           UserMapper userMapper,
+                           @Lazy AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.authenticationService = authenticationService;
     }
 
     @Override
     public UserResponseDTO createUser(UserRequestDTO userDTO) {
         User user = userMapper.toUser(userDTO);
 
-        user.setRole(Role.USER);
         arePasswordsMatching(userDTO.password(), userDTO.confirmedPassword());
+        var encryptedPassword = encodePassword(userDTO.password());
+
+        user.setPassword(encryptedPassword);
+        user.setRole(Role.USER);
         validateEmailAndUsername(userDTO.email(), userDTO.username());
         userRepository.save(user);
 
@@ -47,6 +59,10 @@ public class UserServiceImpl implements UserService {
         if (!password.matches(confirmedPassword)) {
             throw new NotFoundException("Passwords aren't matching");
         }
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     private void validateEmailAndUsername(String email, String username) {
@@ -105,7 +121,25 @@ public class UserServiceImpl implements UserService {
         User user = getById(id);
         userMapper.updateUserFromDTO(userDTO, user);
 
+        authenticationService.canUserAccess(user.getUsername(), "You don't have permission to update user account");
         arePasswordsMatching(userDTO.password(), userDTO.confirmedPassword());
+        var encryptedPassword = encodePassword(userDTO.password());
+
+        user.setPassword(encryptedPassword);
+        userRepository.save(user);
+
+        return userMapper.toUserResponseDTO(user);
+    }
+
+    @Override
+    public UserResponseDTO updatePassword(Long id, PasswordDTO passwordDTO) {
+        User user = getById(id);
+
+        authenticationService.canUserAccess(user.getUsername(), "You don't have permission to update password");
+        arePasswordsMatching(passwordDTO.password(), passwordDTO.confirmedPassword());
+        var encryptedPassword = encodePassword(passwordDTO.password());
+
+        user.setPassword(encryptedPassword);
         userRepository.save(user);
 
         return userMapper.toUserResponseDTO(user);
@@ -113,9 +147,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        User user = getById(id);
+
         existsById(id);
+        authenticationService.canUserAccess(user.getUsername(), "You don't have permission to delete user");
 
         userRepository.deleteById(id);
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
 }

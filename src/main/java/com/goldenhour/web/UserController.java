@@ -1,5 +1,6 @@
 package com.goldenhour.web;
 
+import com.goldenhour.domain.user.model.PasswordDTO;
 import com.goldenhour.domain.user.model.UserRequestDTO;
 import com.goldenhour.domain.user.model.UserResponseDTO;
 import com.goldenhour.domain.user.model.UserUpdateDTO;
@@ -45,6 +46,12 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(id, userDTO));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> updatePassword(@PathVariable Long id, @Valid @RequestBody PasswordDTO passwordDTO) {
+        return ResponseEntity.ok(userService.updatePassword(id, passwordDTO));
     }
 
     @PreAuthorize("hasRole('USER')")
