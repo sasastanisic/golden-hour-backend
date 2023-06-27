@@ -7,7 +7,6 @@ import com.goldenhour.domain.landmark.enums.Category;
 import com.goldenhour.domain.landmark.repository.LandmarkRepository;
 import com.goldenhour.infrastructure.mapper.LandmarkMapperImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -61,11 +60,6 @@ public class LandmarkServiceImplTest {
         List<Landmark> landmarkList = new ArrayList<>();
         landmarkList.add(landmark);
         landmarks = new PageImpl<>(landmarkList);
-    }
-
-    @Test
-    void testCreateLandmark() {
-
     }
 
 }
