@@ -32,7 +32,6 @@ public class TravelController {
         return ResponseEntity.ok(travelService.createTravel(travelDTO));
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<Page<TravelResponseDTO>> getAllTravels(Pageable pageable) {
         return ResponseEntity.ok(travelService.getAllTravels(pageable));
